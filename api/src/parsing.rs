@@ -1,5 +1,20 @@
 use serde::Deserialize;
 
+use crate::{errors::ApiError, SETTINGS_FILE};
+
+pub fn get_sources_from_names(names: &[String]) -> Result<Vec<SourceData>, ApiError> {
+    let mut sources: Vec<SourceData> = Vec::new();
+    let settings: Settings = serde_json::from_str(SETTINGS_FILE)?;
+
+    for source in settings.sources {
+        if names.contains(&source.name) {
+            sources.push(source);
+        }
+    }
+
+    Ok(sources)
+}
+
 #[derive(Deserialize, Debug)]
 pub struct Settings {
     pub sources: Vec<SourceData>,
