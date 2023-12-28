@@ -18,10 +18,12 @@
   in {
     devShells.${system}.default = pkgs.mkShell {
       packages = [
+        # Rust API
         toolchain
-
-        # Reqwest deps
         pkgs.openssl.dev pkgs.pkg-config
+
+        # Vue stuff
+        pkgs.nodejs_20
       ];
     };
   };
