@@ -9,8 +9,11 @@ edition = "2021"
 axum = "0.7.2"
 axum-extra = { version = "0.9.0", features = ["query"] }
 ego-tree = "0.6.2"
-reqwest = "0.11.23"
 scraper = "0.18.1"
 serde = { version = "1.0.193", features = ["derive"] }
 serde_json = "1.0.108"
+steel-core = { git = "https://github.com/mattwparas/steel", version = "0.5.0" }
+steel-derive = { git = "https://github.com/mattwparas/steel", version = "0.4.0" }
+steel-values = { git = "https://github.com/mattwparas/steel", version = "0.1.0" }
 tokio = { version = "1.35.1", features = ["full"] }
+ureq = "2.9.1"
