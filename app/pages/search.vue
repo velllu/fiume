@@ -1,0 +1,36 @@
+<script setup lang="ts">
+interface SearchResult {
+    media: Array<Media>
+}
+
+interface Media {
+    title: string,
+    episode_url: string,
+    image: string,
+}
+
+const route = useRoute()
+const url = `http://127.0.0.1:3001/search?search_term=${route.query.search_term}`
+
+const { data } = await useFetch(url, {})
+const search_result = data.value as string
+const search_results = JSON.parse(search_result) as SearchResult
+const media = search_results.media
+</script>
+
+<template>
+    <ul>
+        <li v-for="element in media">
+            <Card
+                :title="element.title"
+                :episode_url="element.episode_url"
+                :image="element.image"
+            />
+        </li>
+    </ul>
+</template>
+
+<style lang="sass" scoped>
+ul
+    display: flexbox
+</style>
