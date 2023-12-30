@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  api:
+    build: api/
+
+  app:
+    build: app/
+    ports:
+      - 3000:3000
+    environment:
+      - NUXT_PUBLIC_API_ADDRESS=api

@@ -10,7 +10,10 @@ interface Media {
 }
 
 const route = useRoute()
-const url = `http://127.0.0.1:3001/search?search_term=${route.query.search_term}`
+const config = useRuntimeConfig()
+const url =
+    `http://${config.public.apiAddress}:3001/search?search_term=${route.query.search_term}`
+console.log(url)
 
 const { data } = await useFetch(url, {})
 const search_result = data.value as string

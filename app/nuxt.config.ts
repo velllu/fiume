@@ -10,4 +10,9 @@ export default defineNuxtConfig({
       },
     },
   },
+  runtimeConfig: {
+    public: {
+      apiAddress: "127.0.0.1",
+    }
+  }
 })

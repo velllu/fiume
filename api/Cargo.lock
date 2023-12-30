@@ -46,23 +46,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "api"
-version = "0.1.0"
-dependencies = [
- "axum",
- "axum-extra",
- "ego-tree",
- "scraper",
- "serde",
- "serde_json",
- "steel-core",
- "steel-derive",
- "steel-values",
- "tokio",
- "ureq",
-]
-
-[[package]]
 name = "arrayvec"
 version = "0.5.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -378,6 +361,23 @@ checksum = "a258e46cdc063eb8519c00b9fc845fc47bcfca4130e2f08e88665ceda8474245"
 dependencies = [
  "libc",
  "windows-sys 0.52.0",
+]
+
+[[package]]
+name = "fiume-api"
+version = "0.1.0"
+dependencies = [
+ "axum",
+ "axum-extra",
+ "ego-tree",
+ "scraper",
+ "serde",
+ "serde_json",
+ "steel-core",
+ "steel-derive",
+ "steel-values",
+ "tokio",
+ "ureq",
 ]
 
 [[package]]
