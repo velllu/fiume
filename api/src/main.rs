@@ -11,7 +11,7 @@ pub const SETTINGS_FILE: &str = include_str!("../settings.lisp");
 
 #[tokio::main]
 async fn main() -> Result<(), ApiError> {
-    let app = Router::new().route("/search", get(search));
+    let app = Router::new().route("/search/:hi", get(search));
 
     #[cfg(debug_assertions)]
     let listener = tokio::net::TcpListener::bind("127.0.0.1:3001")

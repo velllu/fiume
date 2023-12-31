@@ -1,6 +1,6 @@
 //! This is where we parse the lisp config file
 
-use crate::SETTINGS_FILE;
+use crate::{api::search::SearchResponse, SETTINGS_FILE};
 use scraper::{Html, Selector};
 use serde::{Deserialize, Serialize};
 use steel::{
@@ -23,18 +23,25 @@ pub struct SearchResults {
     titles: Vec<String>,
     episode_urls: Vec<String>,
     images: Vec<String>,
+    next_state: String,
 }
 
 impl SearchResults {
-    pub fn new(titles: Vec<String>, episode_urls: Vec<String>, images: Vec<String>) -> Self {
+    pub fn new(
+        titles: Vec<String>,
+        episode_urls: Vec<String>,
+        images: Vec<String>,
+        next_state: String,
+    ) -> Self {
         Self {
             titles,
             episode_urls,
             images,
+            next_state,
         }
     }
 
-    fn pack_into_media(&self) -> Vec<Media> {
+    fn pack_into_search_results(&self) -> SearchResponse {
         let mut media: Vec<Media> = Vec::new();
 
         for ((title, episode_url), image) in
@@ -47,24 +54,27 @@ impl SearchResults {
             });
         }
 
-        media
+        SearchResponse {
+            media,
+            next_state: self.next_state.clone(),
+        }
     }
 }
 
 // -- Parsing Functions --
-pub fn search(search_term: &str) -> Vec<Media> {
+pub fn search(source_name: &str, search_term: &str) -> SearchResponse {
     let mut vm = new_vm();
     let search_results_value = vm
         .call_function_from_struct(
             "source",
-            "your-source",
+            source_name, // this is the name of the source instance
             "on-search",
             vec![SteelVal::StringV(SteelString::from(search_term))],
         )
         .unwrap();
 
     let search_results = SearchResults::from_steelval(&search_results_value).unwrap();
-    search_results.pack_into_media()
+    search_results.pack_into_search_results()
 }
 
 // -- Lisp functions --

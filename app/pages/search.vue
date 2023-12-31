@@ -12,7 +12,7 @@ interface Media {
 const route = useRoute()
 const config = useRuntimeConfig()
 const url =
-    `http://${config.public.apiAddress}:3001/search?search_term=${route.query.search_term}`
+    `http://${config.public.apiAddress}:3001/search/your-source?search_term=${route.query.search_term}`
 console.log(url)
 
 const { data } = await useFetch(url, {})
