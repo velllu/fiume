@@ -1,7 +1,8 @@
 <script setup>
+// TODO: Make the default not your-source
 function search() {
     let search_query = document.getElementById("search_input").value
-    location.href = "/search?search_term=" + search_query
+    location.href = "/search/your-source?search_term=" + search_query
 }
 </script>
 

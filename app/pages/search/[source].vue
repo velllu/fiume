@@ -1,6 +1,7 @@
 <script setup lang="ts">
 interface SearchResult {
-    media: Array<Media>
+    media: Array<Media>,
+    next_state: string,
 }
 
 interface Media {
@@ -12,8 +13,7 @@ interface Media {
 const route = useRoute()
 const config = useRuntimeConfig()
 const url =
-    `http://${config.public.apiAddress}:3001/search/your-source?search_term=${route.query.search_term}`
-console.log(url)
+    `http://${config.public.apiAddress}:3001/search/${route.params.source}?search_term=${route.query.search_term}`
 
 const { data } = await useFetch(url, {})
 const search_result = data.value as string
@@ -26,14 +26,12 @@ const media = search_results.media
         <li v-for="element in media">
             <Card
                 :title="element.title"
-                :episode_url="element.episode_url"
+                :episode_url="
+                    '/state/' + route.params.source + '?link=' + element.episode_url
+                    + '&state=' + search_results.next_state
+                "
                 :image="element.image"
             />
         </li>
     </ul>
 </template>
-
-<style lang="sass" scoped>
-ul
-    display: flexbox
-</style>
