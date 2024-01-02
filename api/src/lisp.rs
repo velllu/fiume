@@ -1,6 +1,6 @@
 //! This is where we parse the lisp config file
 
-use crate::{api::search::SearchResponse, SETTINGS_FILE};
+use crate::SETTINGS_FILE;
 use scraper::{Html, Selector};
 use serde::{Deserialize, Serialize};
 use steel::{
@@ -18,35 +18,21 @@ pub struct Media {
     image: String,
 }
 
-#[derive(Clone, Steel, PartialEq, Debug)]
-pub struct SearchResults {
-    titles: Vec<String>,
-    episode_urls: Vec<String>,
-    images: Vec<String>,
-    next_state: String,
+#[derive(Clone, Steel, PartialEq, Debug, Serialize, Deserialize)]
+pub struct MediaAndState {
+    pub media: Vec<Media>,
+    pub next_state: String,
 }
 
-impl SearchResults {
-    pub fn new(
+impl MediaAndState {
+    fn new(
         titles: Vec<String>,
         episode_urls: Vec<String>,
         images: Vec<String>,
         next_state: String,
     ) -> Self {
-        Self {
-            titles,
-            episode_urls,
-            images,
-            next_state,
-        }
-    }
-
-    fn pack_into_search_results(&self) -> SearchResponse {
         let mut media: Vec<Media> = Vec::new();
-
-        for ((title, episode_url), image) in
-            self.titles.iter().zip(&self.episode_urls).zip(&self.images)
-        {
+        for ((title, episode_url), image) in titles.iter().zip(&episode_urls).zip(&images) {
             media.push(Media {
                 title: title.clone(),
                 episode_url: episode_url.clone(),
@@ -54,15 +40,13 @@ impl SearchResults {
             });
         }
 
-        SearchResponse {
-            media,
-            next_state: self.next_state.clone(),
-        }
+        Self { media, next_state }
     }
 }
 
 // -- Parsing Functions --
-pub fn search(source_name: &str, search_term: &str) -> SearchResponse {
+// TODO: Make code DRYer
+pub fn search(source_name: &str, search_term: &str) -> MediaAndState {
     let mut vm = new_vm();
     let search_results_value = vm
         .call_function_from_struct(
@@ -73,8 +57,21 @@ pub fn search(source_name: &str, search_term: &str) -> SearchResponse {
         )
         .unwrap();
 
-    let search_results = SearchResults::from_steelval(&search_results_value).unwrap();
-    search_results.pack_into_search_results()
+    MediaAndState::from_steelval(&search_results_value).unwrap()
+}
+
+pub fn state(source_name: &str, link: &str, state_name: &str) -> MediaAndState {
+    let mut vm = new_vm();
+    let state_results_value = vm
+        .call_function_from_struct(
+            "source",
+            source_name,
+            state_name,
+            vec![SteelVal::StringV(SteelString::from(link))],
+        )
+        .unwrap();
+
+    MediaAndState::from_steelval(&state_results_value).unwrap()
 }
 
 // -- Lisp functions --
@@ -161,8 +158,8 @@ impl Extension for Engine {
 // -- Utility functions --
 fn new_vm() -> Engine {
     let mut vm = Engine::new();
-    vm.register_type::<SearchResults>("search-results");
-    vm.register_fn("search-results", SearchResults::new);
+    vm.register_type::<MediaAndState>("search-results");
+    vm.register_fn("search-results", MediaAndState::new);
     vm.register_fn("get", get);
     vm.register_fn("select", select);
     vm.register_fn("select-one", select_one);

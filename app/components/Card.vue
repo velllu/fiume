@@ -4,7 +4,7 @@ const props = defineProps(["title", "episode_url", "image"])
 
 <template>
     <div class="card">
-        <img :src="props.image">
+        <img v-if="props.image" :src="props.image">
         <a :href="props.episode_url">{{props.title}}</a>
     </div>
 </template>

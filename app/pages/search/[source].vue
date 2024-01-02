@@ -18,19 +18,18 @@ const url =
 const { data } = await useFetch(url, {})
 const search_result = data.value as string
 const search_results = JSON.parse(search_result) as SearchResult
-const media = search_results.media
 </script>
 
 <template>
     <ul>
-        <li v-for="element in media">
+        <li v-for="media in search_results.media">
             <Card
-                :title="element.title"
+                :title="media.title"
                 :episode_url="
-                    '/state/' + route.params.source + '?link=' + element.episode_url
-                    + '&state=' + search_results.next_state
+                    '/state/' + route.params.source + '/' + search_results.next_state
+                    + '?link=' + media.episode_url
                 "
-                :image="element.image"
+                :image="media.image"
             />
         </li>
     </ul>
