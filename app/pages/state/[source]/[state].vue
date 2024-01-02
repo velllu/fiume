@@ -29,6 +29,7 @@ const state_results = JSON.parse(state_result) as StateResult
                     '/state/' + route.params.source + '/' + state_results.next_state
                     + '?link=' + element.episode_url
                 "
+                :image="element.image == 'None' ? null : element.image"
             />
         </li>
     </ul>
