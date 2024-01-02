@@ -116,6 +116,18 @@ fn attribute(element: String, attribute: String) -> String {
     root_element.value().attr(&attribute).unwrap().to_string()
 }
 
+fn split(string: String, split_by: String) -> Vec<String> {
+    let mut split_vector: Vec<String> = Vec::new();
+
+    string
+        .split(&split_by)
+        .collect::<Vec<&str>>()
+        .iter()
+        .for_each(|x| split_vector.push(x.to_string()));
+
+    split_vector
+}
+
 // -- Engine extension --
 // We will need to call functions inside of structs, we add this function into `Engine`
 // so we can do that
@@ -165,6 +177,7 @@ fn new_vm() -> Engine {
     vm.register_fn("select-one", select_one);
     vm.register_fn("inner-text", inner_text);
     vm.register_fn("attribute", attribute);
+    vm.register_fn("split", split);
     let _ = vm.run(SETTINGS_FILE).unwrap();
     vm
 }
