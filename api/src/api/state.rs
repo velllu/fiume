@@ -1,21 +1,22 @@
 use axum::extract::Path;
 use axum_extra::extract::Query;
-use serde::{Deserialize, Serialize};
+use serde::Deserialize;
 
-use crate::lisp::{self};
+use crate::lisp::{self, State};
 
 #[derive(Debug, Deserialize)]
 pub struct StateRequest {
     link: String,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
-pub struct StateResponse;
-
 pub async fn state(
     Query(params): Query<StateRequest>,
     Path((source, state)): Path<(String, String)>,
 ) -> String {
     let state_results = lisp::state(&source, &params.link, &state);
-    serde_json::to_string(&state_results).unwrap()
+
+    match state_results {
+        State::Options(media_and_state) => serde_json::to_string(&media_and_state).unwrap(),
+        State::Video(link) => format!(r#"{{"link": {}}}"#, serde_json::to_string(&link).unwrap()),
+    }
 }

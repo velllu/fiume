@@ -1,23 +1,10 @@
 <script setup lang="ts">
-interface SearchResult {
-    media: Array<Media>,
-    next_state: string,
-}
-
-interface Media {
-    title: string,
-    episode_url: string,
-    image: string,
-}
-
 const route = useRoute()
-const config = useRuntimeConfig()
-const url =
-    `http://${config.public.apiAddress}:3001/search/${route.params.source}?search_term=${route.query.search_term}`
+const url = get_url(`/search/${route.params.source}?search_term=${route.query.search_term}`)
 
 const { data } = await useFetch(url, {})
 const search_result = data.value as string
-const search_results = JSON.parse(search_result) as SearchResult
+const search_results = JSON.parse(search_result) as MediaAndState
 </script>
 
 <template>

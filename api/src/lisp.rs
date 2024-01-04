@@ -45,6 +45,11 @@ impl MediaAndState {
 }
 
 // -- Parsing Functions --
+pub enum State {
+    Options(MediaAndState),
+    Video(String),
+}
+
 // TODO: Make code DRYer
 pub fn search(source_name: &str, search_term: &str) -> MediaAndState {
     let mut vm = new_vm();
@@ -60,7 +65,7 @@ pub fn search(source_name: &str, search_term: &str) -> MediaAndState {
     MediaAndState::from_steelval(&search_results_value).unwrap()
 }
 
-pub fn state(source_name: &str, link: &str, state_name: &str) -> MediaAndState {
+pub fn state(source_name: &str, link: &str, state_name: &str) -> State {
     let mut vm = new_vm();
     let state_results_value = vm
         .call_function_from_struct(
@@ -71,7 +76,14 @@ pub fn state(source_name: &str, link: &str, state_name: &str) -> MediaAndState {
         )
         .unwrap();
 
-    MediaAndState::from_steelval(&state_results_value).unwrap()
+    let media_and_state = MediaAndState::from_steelval(&state_results_value);
+    if let Ok(media_and_state) = media_and_state {
+        return State::Options(media_and_state);
+    }
+
+    // If the vm returns a Video instead of a MediaAndState, then it's a video
+    let video = String::from_steelval(&state_results_value).unwrap();
+    State::Video(video)
 }
 
 // -- Lisp functions --
@@ -97,7 +109,7 @@ fn select_one(body: String, query: String) -> String {
         .select(&Selector::parse(&query).unwrap())
         .next()
         .unwrap()
-        .inner_html()
+        .html()
 }
 
 fn inner_text(element: String) -> String {
