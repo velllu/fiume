@@ -140,6 +140,10 @@ fn split(string: String, split_by: String) -> Vec<String> {
     split_vector
 }
 
+fn replace(string: String, from: String, to: String) -> String {
+    string.replace(&from, &to)
+}
+
 // -- Engine extension --
 // We will need to call functions inside of structs, we add this function into `Engine`
 // so we can do that
@@ -190,6 +194,7 @@ fn new_vm() -> Engine {
     vm.register_fn("inner-text", inner_text);
     vm.register_fn("attribute", attribute);
     vm.register_fn("split", split);
+    vm.register_fn("replace", replace);
     let _ = vm.run(SETTINGS_FILE).unwrap();
     vm
 }
