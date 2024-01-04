@@ -1,4 +1,6 @@
 <template>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet"> 
+
     <Navbar/>
 
     <div class="center-box">

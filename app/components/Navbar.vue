@@ -8,7 +8,7 @@ function search() {
 
 <template>
     <nav>
-        <h1>Fiume</h1>
+        <a href="/"><h1>Fiume</h1></a>
 
         <form action="javascript:void(0)">
             <input type="text" placeholder="Search..." id="search_input"/>
@@ -32,8 +32,17 @@ nav
     align-items: center
     justify-content: center
 
-    width: 100vw
-    height: 3rem
+    position: sticky
+    top: 0
+    left: 0
 
-    background-color: #0D2B47
+    z-index: 1
+
+    width: 100vw
+    height: 4rem
+
+    background-color: $dark-background
+
+    border-bottom: $border
+    box-shadow: $box-shadow
 </style>

@@ -1,26 +1,53 @@
 // --- VARIABLES ---
 // Colors
-$background-color: #06071D
+$background-color: #2b2b2b
 $foreground-color: #F3F3F3
+$dark-background: darken($background-color, 5%)
 
 // Others
 $border-radius: 10px
 $margin: 2em
 $small-margin: calc($margin / 2)
+$border: 1px solid darken($foreground-color, 20%)
+$box-shadow: 0px 5px 5px $dark-background
+$animation-duration: 0.25s
 
 // Default colors
 body, input, button
     background-color: $background-color
 
 p, h1, h2, h3, a, button, input
+    font-family: 'Montserrat', sans-serif
     color: $foreground-color
 
 // Default styling
 button, input
-    border: none
+    border: $border
+    outline: none
+
+    transition: background-color $animation-duration
+
+    &:focus, &:hover
+        background-color: $dark-background
 
 button
     cursor: pointer
 
 button, input
     border-radius: $border-radius
+
+ul, ol
+    list-style: none
+
+a
+    outline: none
+    text-decoration: none
+
+@keyframes appear
+    from
+        transform: translateY(40px)
+        opacity: 0
+
+    to
+        transform: translateY(0px)
+        opacity: 1

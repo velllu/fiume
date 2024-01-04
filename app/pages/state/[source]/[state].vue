@@ -14,7 +14,7 @@ const state_result = data.value as string
 const state_result_json: JSON = JSON.parse(state_result)
 
 // WARNING:
-// This is unsafe to access if the state is not `StateType.Options`
+// These are unsafe to access if the state is not `StateType.Options`
 const media_and_state: MediaAndState = (state_result_json as any) as MediaAndState
 
 // and this is unsafe to access if the state is not `StateType.Video`
@@ -37,9 +37,32 @@ if ("link" in state_result_json) {
     <Player v-if="state == StateType.Video" :link="video.link"/>
 
     <!-- Options -->
-    <ul v-if="state == StateType.Options">
-        <li v-for="element in media_and_state.media">
+    <CardGrid v-if="state == StateType.Options">
+        <CardsCardButton
+            v-if="!should_display_image(media_and_state.media)"
+            v-for="media in media_and_state.media"
+            :title="media.title"
+            :episode_url="
+                '/state/' + route.params.source + '/' + media_and_state.next_state
+                + '?link=' + media.episode_url
+            "
+        />
+
+        <CardsCardImage
+            v-if="should_display_image(media_and_state.media)"
+            v-for="media in media_and_state.media"
+            :title="media.title"
+            :episode_url="
+                '/state/' + route.params.source + '/' + media_and_state.next_state
+                + '?link=' + media.episode_url
+            "
+            :image="media.image"
+        />
+    </CardGrid>
+    <!-- <ul v-if="state == StateType.Options">
+        <CardGrid>
             <Card
+                v-for="element in media_and_state.media"
                 :title="element.title"
                 :episode_url="
                     '/state/' + route.params.source + '/' + media_and_state.next_state
@@ -47,6 +70,6 @@ if ("link" in state_result_json) {
                 "
                 :image="element.image == 'None' ? null : element.image"
             />
-        </li>
-    </ul>
+        </CardGrid>
+    </ul> -->
 </template>
