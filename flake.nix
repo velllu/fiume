@@ -17,10 +17,14 @@
     toolchain = pkgs.rust-bin.fromRustupToolchainFile ./api/toolchain.toml;
   in {
     devShells.${system}.default = pkgs.mkShell {
+      # This is not for production
+      DATABASE_URL="postgresql://username:password@localhost:8001/fiume";
+
       packages = [
         # Rust API
         toolchain
         pkgs.openssl.dev pkgs.pkg-config
+        pkgs.sqlx-cli
 
         # Vue stuff
         pkgs.nodejs_20

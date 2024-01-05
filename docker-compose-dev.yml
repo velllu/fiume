@@ -1,7 +1,10 @@
 version: '3.8'
 
+# This is like `docker-compose.yml` except it just sets up a database without running
+# the api and the app. Those are meant to be launched on bare metal when developing
+
 services:
-  pgadmin: # (optional)
+  pgadmin:
     image: docker.io/dpage/pgadmin4
     ports:
       - "8000:80"
@@ -16,24 +19,12 @@ services:
     environment:
       - POSTGRES_USER=username
       - POSTGRES_PASSWORD=password
+    ports:
+      # In the dev version, the port is exposed, because in the prod version, you can
+      # access the db by just using its docker container name
+      - "8001:5432"
     volumes:
-      - db:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
 
-  api:
-    build: api/
-    environment:
-      - DATABASE_URL=postgresql://username:password@db:5432/fiume;
-      - DATABASE_USER=username
-      - DATABASE_PASSWORD=password
-
-  app:
-    build: app/
-    ports:
-      - 3000:3000
-    environment:
-      - NUXT_PUBLIC_API_ADDRESS=api
-
 volumes:
-  db:
   pgadmin:
