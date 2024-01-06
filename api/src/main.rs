@@ -1,4 +1,4 @@
-use crate::api::{register::register, search::search, state::state};
+use crate::api::{account::register, search::search, state::state};
 
 use axum::{
     routing::{get, post},
