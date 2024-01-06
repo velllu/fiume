@@ -24,7 +24,10 @@
         # Rust API
         toolchain
         pkgs.openssl.dev pkgs.pkg-config
+
+        # Others
         pkgs.sqlx-cli
+        pkgs.postgresql
 
         # Vue stuff
         pkgs.nodejs_20
