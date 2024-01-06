@@ -40,15 +40,18 @@ pub mod account {
             .fetch_optional(conn)
             .await?;
 
-        // We update the session id if it does not exist
+        // We update the session id if it does not exist. The indentation level is
+        // criminal, i'm sorry
         if let Some(user) = &mut user {
-            user.session_id.get_or_insert(
-                update_session_id(conn, username, &password)
-                    .await?
-                    .unwrap() // we just checked if the user exists so we can unwrap
-                    .session_id
-                    .unwrap(), // guaranteed to have set a new session id so we can unwrap
-            );
+            if user.session_id.is_none() {
+                user.session_id = Some(
+                    update_session_id(conn, username, &password)
+                        .await?
+                        .unwrap() // we just checked if the user exists so we can unwrap
+                        .session_id
+                        .unwrap(), // guaranteed to have set a new session id so we can unwrap
+                );
+            }
         }
 
         Ok(user)

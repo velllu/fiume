@@ -1,4 +1,8 @@
-use crate::api::{account::register, search::search, state::state};
+use crate::api::{
+    account::{login, register},
+    search::search,
+    state::state,
+};
 
 use axum::{
     routing::{get, post},
@@ -18,7 +22,8 @@ async fn main() -> Result<(), ApiError> {
     let app = Router::new()
         .route("/search/:source", get(search))
         .route("/state/:source/:state", get(state))
-        .route("/account/register", post(register));
+        .route("/account/register", post(register))
+        .route("/account/login", post(login));
 
     #[cfg(debug_assertions)]
     let listener = tokio::net::TcpListener::bind("127.0.0.1:3001")
