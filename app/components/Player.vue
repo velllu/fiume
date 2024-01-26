@@ -7,3 +7,9 @@ const props = defineProps(["link"])
         <source :src="props.link"/>
     </video>
 </template>
+
+<style lang="sass" scoped>
+video
+    box-shadow: $box-shadow
+    width: 100%
+</style>
